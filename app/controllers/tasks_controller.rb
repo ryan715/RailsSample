@@ -1,10 +1,23 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy, :job_done ]
 
+
+  def job_sent
+    @tasks = Task.where(:from => current_user.email, :done => true).includes(:project).where("projects.id = tasks.project_id")
+    
+    @tasks_undoe = Task.where(:from => current_user.email, :done => false).includes(:project).where("projects.id = tasks.project_id")
+    
+  end
   # GET /tasks
   # GET /tasks.json
   def index
-    @tasks = Task.where(:to => current_user.email) 
+    @tasks = Task.where(:to => current_user.email, :done => false) 
+    
+    # @done_jobs = Task.joins("LEFT OUTER JOIN projects ON projects.id = tasks.project_id")
+                      # .where(:to => current_user.email, :done => true)
+                      
+    @done_jobs = Task.where(:to => current_user.email, :done => true).includes(:project).where("projects.id = tasks.project_id")
+     
   end
 
   # GET /tasks/1

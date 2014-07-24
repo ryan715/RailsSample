@@ -2,6 +2,11 @@ SampleCode::Application.routes.draw do
   resources :tasks do
     member do
       put :job_done
+      put :job_sent
+    end
+    
+    collection do
+      get :job_sent
     end
   end
   
